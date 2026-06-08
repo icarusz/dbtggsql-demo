@@ -1,0 +1,175 @@
+---
+title: "demo cheatsheet"
+subtitle: "ggsql + dbt · posit hackathon 2026"
+format:
+  html:
+    theme: flatly
+    toc: true
+    toc-title: "steps"
+    toc-depth: 2
+    embed-resources: true
+    css: posit.css
+---
+
+```{=html}
+<style>
+  .artifact    { background: #DEF1EB; border-left: 3px solid #0A9396;
+                 padding: 0.5em 0.8em; border-radius: 0 6px 6px 0;
+                 font-size: 0.9em; color: #005F73; margin-top: 0.5em; }
+  .dir-badge   { background: #001219; color: #94D2BD; font-family: monospace;
+                 font-size: 0.8em; padding: 2px 8px; border-radius: 4px;
+                 display: inline-block; margin-bottom: 0.6em; }
+  .reset-block { background: #FFF3F0; border-left: 3px solid #FF694B;
+                 padding: 0.5em 0.8em; border-radius: 0 6px 6px 0; margin-top: 0.5em; }
+  .tab-label   { background: #447099; color: white; font-size: 0.75em;
+                 font-weight: 600; padding: 2px 10px; border-radius: 4px;
+                 display: inline-block; margin-bottom: 0.4em; }
+  h2 { border-bottom: 1px solid #DEF1EB; padding-bottom: 0.3em; }
+</style>
+```
+
+## before you start
+
+Open **two terminal tabs** and leave them open for the whole demo.
+
+<div class="tab-label">TAB 1 — original project</div>
+
+```bash
+cd ~/Desktop/Projects/dbtggsql-demo
+```
+
+<div class="tab-label">TAB 2 — modified dbt</div>
+
+```bash
+cd ~/Desktop/Projects/dbtggsql-demo-modifieddbt/nba_dbt
+```
+
+Then launch the slides:
+
+```bash
+open demo_intro.html
+```
+
+---
+
+## slides 1–5
+
+**the problem · the idea · why now? · how it works · same sql. no bi tool.**
+
+No commands. Talk through the deck.
+
+---
+
+## option a · ggsql cli
+
+<div class="tab-label">TAB 1</div>
+<div class="dir-badge">~/Desktop/Projects/dbtggsql-demo</div>
+
+```bash
+OUTPUT=cli make
+```
+
+<div class="artifact">
+  → <strong>11 chart HTML files</strong> appear in <code>output/charts/</code>
+</div>
+
+```bash
+open output/charts/shot_chart_knicks_cavs.html
+```
+
+---
+
+## option b · static bundle
+
+<div class="tab-label">TAB 1</div>
+<div class="dir-badge">~/Desktop/Projects/dbtggsql-demo</div>
+
+```bash
+OUTPUT=static make
+```
+
+<div class="artifact">
+  → <code>output/static/index.html</code> assembled — grid of links, no runtime
+</div>
+
+```bash
+open output/static/index.html
+```
+
+---
+
+## option c · full report
+
+<div class="tab-label">TAB 1</div>
+<div class="dir-badge">~/Desktop/Projects/dbtggsql-demo</div>
+
+```bash
+make
+```
+
+<div class="artifact">
+  → <code>nba_report.html</code> — narrative + TOC + 17 charts
+</div>
+
+```bash
+open nba_report.html
+```
+
+---
+
+## hooks are nice, built-in would be better
+
+<div class="tab-label">TAB 2</div>
+<div class="dir-badge">~/Desktop/Projects/dbtggsql-demo-modifieddbt/nba_dbt</div>
+
+```bash
+uv run dbt ls --profiles-dir . --project-dir . --resource-type visualization
+```
+
+Point at: **`nba_finals.visualization.shot_chart_knicks_cavs`**
+
+---
+
+## visualization as a native dbt node
+
+<div class="tab-label">TAB 2</div>
+<div class="dir-badge">~/Desktop/Projects/dbtggsql-demo-modifieddbt/nba_dbt</div>
+
+```bash
+uv run dbt build --profiles-dir . --project-dir . --select shot_chart_knicks_cavs
+```
+
+Point at the build line:
+
+> `Finished running 1 project hook, 1 visualization in 0.42s`
+
+<div class="artifact">
+  → <code>output/charts/shot_chart_knicks_cavs.html</code> — built by dbt as a native node type
+</div>
+
+```bash
+open output/charts/shot_chart_knicks_cavs.html
+```
+
+---
+
+## what could be next · thanks
+
+No commands. Close on the deck.
+
+---
+
+## reset
+
+<div class="dir-badge">any tab</div>
+
+```bash
+rm -f ~/Desktop/Projects/dbtggsql-demo/output/charts/*.html
+rm -rf ~/Desktop/Projects/dbtggsql-demo/output/static
+rm -f ~/Desktop/Projects/dbtggsql-demo/nba_report.html
+rm -f ~/Desktop/Projects/dbtggsql-demo-modifieddbt/nba_dbt/output/charts/*.html
+```
+
+<div class="reset-block">
+  <strong>After reset:</strong> <code>output/charts/</code> dirs exist but are empty. All output HTML files are gone. <code>make</code> rebuilds everything from scratch.
+</div>

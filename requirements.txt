@@ -1,0 +1,2 @@
+ggsql-jupyter>=0.3.2
+dbt-duckdb>=1.9

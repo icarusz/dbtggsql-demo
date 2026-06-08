@@ -1,0 +1,17 @@
+project:
+  title: "ggsql + dbt · Posit Hackathon 2026"
+  type: default
+  render:
+    - nba_report.qmd
+    - cheatsheet.qmd
+    - demo_intro.qmd
+
+execute:
+  freeze: auto
+
+format:
+  html:
+    theme: cosmo
+    code-fold: false
+    toc: true
+
