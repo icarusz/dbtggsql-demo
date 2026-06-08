@@ -63,6 +63,12 @@ cheatsheet.qmd     # demo walkthrough guide
 demo_intro.qmd     # revealjs presentation deck
 ```
 
+## sample output
+
+**[nba report →](https://htmlpreview.github.io/?https://github.com/icarusz/dbtggsql-demo/blob/main/docs/sample_nba_report.html)** — the full narrative report: shot charts, game-by-game margins, efficiency breakdowns, and player comparisons, all rendered directly from ggsql queries over dbt mart tables.
+
 ## related
 
 **[dbtggsql-demo-modifieddbt](https://github.com/icarusz/dbtggsql-demo-modifieddbt)** — takes this further: a fork of dbt-core that adds `visualization` as a native node type, so `.ggsql` files run as first-class dbt nodes alongside models, seeds, and tests.
+
+**[dbtggsql-demo-extension-pkg](https://github.com/icarusz/dbtggsql-demo-extension-pkg)** — a pip-installable `dbt-ggsql` community extension that adds a `dbt-ggsql build` CLI wrapping dbt build and ggsql rendering into a single command.
