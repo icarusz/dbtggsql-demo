@@ -71,8 +71,6 @@ pre, code {
 }
 
 pre {
-  background: var(--black) !important;
-  color: #e2e8f0;
   padding: 1rem 1.25rem;
   overflow-x: auto;
 }
