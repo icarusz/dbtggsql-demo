@@ -1,0 +1,210 @@
+---
+title: "ggsql + dbt"
+subtitle: "SQL engineers ship visualizations without leaving the pipeline"
+date: "Posit Hackathon · June 2026"
+format:
+  html:
+    embed-resources: true
+    toc: false
+    theme: default
+    css: overview.css
+---
+
+<div class="exec-summary">
+
+**Every dbt project ends at the same wall.** The marts are ready, the data is clean, and someone opens Tableau — not because the analysis is incomplete, but because SQL has no syntax for a picture.
+
+[ggsql](https://github.com/posit-dev/ggsql) closes that gap. It extends SQL with Grammar of Graphics clauses — `VISUALISE`, `DRAW`, `SCALE`, `FACET`, `LABEL` — so that the same query that shapes data also renders it. **The result is a pipeline that delivers charts, not just tables.** No BI tool. No Python handoff. No second language.
+
+Two production-ready integrations exist. The **community extension** (`pip install dbt-ggsql`) adds a single command, `dbt-ggsql build`, that runs the full pipeline end-to-end. The **dbt-core fork** goes deeper: it adds `visualization` as a native node type, so `.ggsql` files participate in `dbt build` alongside models, tests, and seeds. Either path gives SQL engineers a complete, self-contained delivery artifact.
+
+</div>
+
+---
+
+## The problem
+
+dbt has become the standard for SQL-based data transformation. A mature dbt project produces staging views, intermediate models, and clean mart tables — everything an analyst needs to answer a question. But answering the question visually still requires leaving the pipeline.
+
+SQL engineers hand finished tables to BI tools, Python notebooks, or separate render scripts. Those tools introduce a new language, a new deployment surface, and a new maintenance burden. The SQL is already written. The data is already there. The BI tool adds one thing: a picture.
+
+## The solution
+
+ggsql extends SQL with Grammar of Graphics syntax. An engineer writes a SELECT query and follows it with visualization clauses:
+
+```sql
+SELECT team, pts, reb FROM mart_player_stats
+VISUALISE pts AS x, reb AS y, team AS color
+DRAW point
+LABEL title => 'Scoring vs. Rebounding',
+      x => 'Points', y => 'Rebounds'
+```
+
+That query is a complete visualization. The ggsql CLI executes it and emits a Vega-Lite spec — an interactive chart or a pre-rendered inline SVG. Anyone who writes SQL already speaks this language.
+
+The integration with dbt is the missing piece. ggsql queries can reference mart tables directly. dbt builds the tables; ggsql renders them. The two tools form a single pipeline with a single command.
+
+---
+
+## Start here: the Makefile demo
+
+The fastest way to see the pipeline working is the Makefile project. Clone it, run one command, and charts appear in under a minute:
+
+```bash
+git clone https://github.com/icarusz/dbtggsql-demo
+cd dbtggsql-demo
+make report
+open output/report/index.html
+```
+
+The Makefile orchestrates `dbt build` followed by the ggsql CLI — transparent enough to read in five minutes, representative enough to show every output mode:
+
+| command | output |
+|---|---|
+| `OUTPUT=cli make` | `output/charts/*.html` — 11 individual chart files |
+| `OUTPUT=static make` | `output/static/index.html` — navigable static bundle |
+| `make` | `nba_report.html` — full narrative Quarto report |
+
+This project uses a fictional 2026 NBA Finals (Knicks vs. Spurs), built from seeded CSVs running entirely in DuckDB. It demonstrates the concept without any external database.
+
+The Makefile is a demo, not a recommendation. For real projects, the two options below integrate ggsql more directly.
+
+---
+
+## Option 1 — Community extension
+
+The community extension ships as a pip-installable package that wraps dbt and ggsql into a single command:
+
+```bash
+pip install dbt-ggsql
+dbt-ggsql build                  # dbt build + visualizations → HTML
+dbt-ggsql build --output qmd     # → Quarto document with code-foldable SQL
+dbt-ggsql build --output both    # → both
+```
+
+Place `.ggsql` files in a `visualizations/` folder inside the dbt project. After `dbt build` runs, the extension executes each file through the ggsql CLI, collects the Vega-Lite output, and assembles a report. The default output is a self-contained HTML file: inline SVG, no JavaScript, no CDN dependencies — it works in any static viewer, email client, or GitHub preview. With `--output qmd`, it produces a Quarto document where each chart appears in its own section with the source SQL visible behind a `▶ show query` fold.
+
+```
+nba_dbt/
+  models/              # dbt models
+  seeds/               # raw CSVs
+  visualizations/      # .ggsql files — one per chart
+    shot_chart.ggsql
+    player_comparison.ggsql
+    efficiency_scoring.ggsql
+  output/              # generated — gitignored
+    visualizations.html
+    charts/
+```
+
+**The extension requires no changes to dbt-core.** Any existing dbt project can adopt it with a single `pip install`.
+
+→ [github.com/icarusz/dbtggsql-demo-extension-pkg](https://github.com/icarusz/dbtggsql-demo-extension-pkg)
+
+---
+
+## Option 2 — dbt-core visualization node
+
+The deeper integration patches dbt-core itself to add `visualization` as a first-class node type. `.ggsql` files in `visualizations/` become nodes in the dbt graph: they appear in `dbt ls`, participate in `dbt build` and `dbt run`, respect `--select` and `--exclude`, and can declare `depends_on` like any model.
+
+```bash
+dbt build                              # runs models AND visualizations
+dbt run --select shot_chart            # run one visualization
+dbt ls --resource-type visualization   # list all visualization nodes
+```
+
+```yaml
+# in schema.yml — visualization nodes work like models
+models:
+  - name: shot_chart_knicks_cavs
+    description: "Shot chart for Knicks vs. Cavs"
+    depends_on:
+      - ref('mart_shot_attempts')
+```
+
+This option requires maintaining a fork of dbt-core. The benefit is architectural: visualizations become citizens of the dbt DAG. They show up in the lineage graph. They run in the right order automatically. They can be targeted, skipped, and tested alongside the models they depend on.
+
+For teams that want visualization woven into the pipeline — not bolted onto its end — this is the right structure. For teams that want zero changes to their dbt installation, Option 1 is the right starting point.
+
+→ [github.com/icarusz/dbtggsql-demo-modifieddbt](https://github.com/icarusz/dbtggsql-demo-modifieddbt)
+
+---
+
+<div class="page-break"></div>
+
+## Sample reports
+
+The links below are rendered outputs from the two main repos — no installation required. Each file is a self-contained HTML, pre-rendered to inline SVG.
+
+<div class="sample-grid">
+
+<div class="sample-card">
+<div class="sample-thumb">
+<img src="how-it-works.svg" alt="how it works diagram" />
+</div>
+<div class="sample-info">
+<div class="sample-label">Makefile demo · full report</div>
+<h3><a href="https://htmlpreview.github.io/?https://github.com/icarusz/dbtggsql-demo/blob/main/docs/sample_nba_report.html" target="_blank">NBA Report →</a></h3>
+<p>Shot charts, game-by-game margins, efficiency breakdowns, and player scatter plots. Rendered by the Quarto report pipeline directly from ggsql queries over dbt mart tables.</p>
+<div class="sample-tags">
+<span class="tag">Quarto</span>
+<span class="tag">11 charts</span>
+<span class="tag">DuckDB</span>
+</div>
+</div>
+</div>
+
+<div class="sample-card">
+<div class="sample-thumb sample-thumb-dark">
+<img src="../../dbtggsql-demo-modifieddbt/docs/native-node.svg" alt="native node diagram" />
+</div>
+<div class="sample-info">
+<div class="sample-label">dbt-core fork · native node</div>
+<h3><a href="https://htmlpreview.github.io/?https://github.com/icarusz/dbtggsql-demo-modifieddbt/blob/main/docs/sample_shot_chart.html" target="_blank">Shot Chart →</a></h3>
+<p>A single visualization node running as a first-class dbt node. The shot chart renders inside <code>dbt build</code> — same command, same graph, same DAG as the rest of the pipeline.</p>
+<div class="sample-tags">
+<span class="tag">dbt-core fork</span>
+<span class="tag">NodeType.Visualization</span>
+</div>
+</div>
+</div>
+
+<div class="sample-card">
+<div class="sample-thumb sample-thumb-teal">
+<div class="sample-thumb-label">
+<div class="thumb-icon">⬡</div>
+<div class="thumb-text">HTML output</div>
+</div>
+</div>
+<div class="sample-info">
+<div class="sample-label">Community extension · HTML</div>
+<h3><a href="https://htmlpreview.github.io/?https://github.com/icarusz/dbtggsql-demo-extension-pkg/blob/main/docs/sample_visualizations.html" target="_blank">visualizations.html →</a></h3>
+<p>Self-contained SVG grid produced by <code>dbt-ggsql build --output html</code>. Shot charts, efficiency comparisons, and player scatter plots. No JavaScript, works anywhere.</p>
+<div class="sample-tags">
+<span class="tag">--output html</span>
+<span class="tag">inline SVG</span>
+<span class="tag">no CDN</span>
+</div>
+</div>
+</div>
+
+<div class="sample-card">
+<div class="sample-thumb sample-thumb-navy">
+<div class="sample-thumb-label">
+<div class="thumb-icon">▶</div>
+<div class="thumb-text">Quarto output</div>
+</div>
+</div>
+<div class="sample-info">
+<div class="sample-label">Community extension · Quarto</div>
+<h3><a href="https://htmlpreview.github.io/?https://github.com/icarusz/dbtggsql-demo-extension-pkg/blob/main/docs/sample_visualizations_qmd.html" target="_blank">visualizations_qmd.html →</a></h3>
+<p>Rendered Quarto output from <code>dbt-ggsql build --output qmd</code>. Each chart in its own section. Source SQL visible via <code>▶ show query</code> code-fold. TOC navigation.</p>
+<div class="sample-tags">
+<span class="tag">--output qmd</span>
+<span class="tag">code-fold SQL</span>
+<span class="tag">TOC</span>
+</div>
+</div>
+</div>
+
+</div>

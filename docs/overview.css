@@ -1,0 +1,231 @@
+/* ── brand colours ── */
+:root {
+  --black:     #001219;
+  --darkteal:  #005F73;
+  --teal:      #0A9396;
+  --lightteal: #94D2BD;
+  --paleteal:  #DEF1EB;
+  --orange:    #FF694B;
+  --blue:      #447099;
+  --ink:       #1e293b;
+  --muted:     #64748b;
+  --border:    #e2e8f0;
+  --bg:        #f8fafc;
+}
+
+/* ── page shell ── */
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  color: var(--ink);
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+h1.title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--black);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.15em;
+}
+
+.subtitle {
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+/* ── executive summary box ── */
+.exec-summary {
+  background: var(--paleteal);
+  border-left: 4px solid var(--darkteal);
+  border-radius: 0 8px 8px 0;
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem 0 2rem;
+}
+
+.exec-summary p {
+  margin: 0 0 0.75rem;
+  line-height: 1.65;
+}
+
+.exec-summary p:last-child { margin-bottom: 0; }
+
+.exec-summary strong { color: var(--darkteal); }
+
+/* ── section headings ── */
+h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--darkteal);
+  border-bottom: 2px solid var(--paleteal);
+  padding-bottom: 0.3em;
+  margin-top: 2.25rem;
+}
+
+h3 { font-size: 1rem; font-weight: 600; }
+
+/* ── code ── */
+pre, code {
+  font-size: 0.85em;
+  border-radius: 4px;
+}
+
+pre {
+  background: var(--black) !important;
+  color: #e2e8f0;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
+}
+
+/* ── tables ── */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+th {
+  background: var(--paleteal);
+  color: var(--darkteal);
+  text-align: left;
+  padding: 0.55rem 0.9rem;
+  border-bottom: 2px solid var(--lightteal);
+}
+
+td {
+  padding: 0.5rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+}
+
+td code { background: var(--bg); padding: 0.15em 0.4em; border-radius: 3px; }
+
+/* ── repo links ── */
+p > a[href*="github.com"] {
+  display: inline-block;
+  margin-top: 0.5rem;
+  color: var(--blue);
+  font-size: 0.9rem;
+}
+
+/* ── sample grid ── */
+.sample-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.sample-card {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  box-shadow: 0 1px 4px #0000000d;
+}
+
+/* ── thumbnail area ── */
+.sample-thumb {
+  background: var(--paleteal);
+  padding: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 110px;
+}
+
+.sample-thumb img {
+  max-height: 90px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.sample-thumb-dark  { background: var(--black); }
+.sample-thumb-teal  { background: var(--teal); }
+.sample-thumb-navy  { background: var(--darkteal); }
+
+.sample-thumb-label {
+  text-align: center;
+  color: white;
+}
+
+.thumb-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.25rem;
+  opacity: 0.85;
+}
+
+.thumb-text {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+/* ── card body ── */
+.sample-info {
+  padding: 0.9rem 1.1rem 1rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.sample-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.sample-info h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.sample-info h3 a {
+  color: var(--darkteal);
+  text-decoration: none;
+}
+
+.sample-info h3 a:hover { text-decoration: underline; }
+
+.sample-info p {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 0;
+  flex: 1;
+}
+
+/* ── tags ── */
+.sample-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-top: 0.4rem;
+}
+
+.tag {
+  font-size: 0.7rem;
+  background: var(--paleteal);
+  color: var(--darkteal);
+  border-radius: 4px;
+  padding: 0.15em 0.55em;
+  font-weight: 600;
+}
+
+/* ── print / page break ── */
+@media print {
+  .page-break { page-break-before: always; }
+}
+
+/* ── responsive ── */
+@media (max-width: 640px) {
+  .sample-grid { grid-template-columns: 1fr; }
+  h1.title     { font-size: 1.8rem; }
+}

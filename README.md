@@ -63,6 +63,10 @@ cheatsheet.qmd     # demo walkthrough guide
 demo_intro.qmd     # revealjs presentation deck
 ```
 
+## overview
+
+**[project overview →](https://htmlpreview.github.io/?https://github.com/icarusz/dbtggsql-demo/blob/main/docs/overview.html)** — one-page writeup covering the goal, the three integration approaches, and links to sample output from each repo.
+
 ## sample output
 
 **[nba report →](https://htmlpreview.github.io/?https://github.com/icarusz/dbtggsql-demo/blob/main/docs/sample_nba_report.html)** — the full narrative report: shot charts, game-by-game margins, efficiency breakdowns, and player comparisons, all rendered directly from ggsql queries over dbt mart tables.
