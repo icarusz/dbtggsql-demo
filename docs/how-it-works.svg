@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 355" width="760" height="355" font-family="'Nunito Sans',system-ui,sans-serif">
+  <defs>
+    <marker id="hw-a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#94D2BD"/>
+    </marker>
+    <marker id="hw-ao" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0,8 3,0 6" fill="#FFB8A8"/>
+    </marker>
+    <filter id="hw-s"><feDropShadow dx="0" dy="1" stdDeviation="3" flood-color="#00000012"/></filter>
+  </defs>
+
+  <!-- SOURCES -->
+  <rect x="10" y="30" width="128" height="138" rx="8" fill="#F9F9F9" stroke="#94D2BD" stroke-width="1.5" filter="url(#hw-s)"/>
+  <rect x="10" y="30" width="128" height="24" rx="8" fill="#64748B"/>
+  <rect x="10" y="42"  width="128" height="12" fill="#64748B"/>
+  <text x="74" y="46" text-anchor="middle" font-size="10.5" font-weight="600" fill="#F9F9F9">sources</text>
+  <text x="74" y="74"  text-anchor="middle" font-size="9.5" fill="#64748B">csv / parquet</text>
+  <text x="74" y="92"  text-anchor="middle" font-size="9.5" fill="#64748B">fivetran</text>
+  <text x="74" y="110" text-anchor="middle" font-size="9.5" fill="#64748B">airbyte</text>
+  <text x="74" y="128" text-anchor="middle" font-size="9"   fill="#94D2BD">· · ·</text>
+  <text x="74" y="155" text-anchor="middle" font-size="8"   fill="#94D2BD" font-style="italic">any flat file source</text>
+
+  <!-- sources → dbt -->
+  <line x1="138" y1="99" x2="156" y2="99" stroke="#94D2BD" stroke-width="1.5" marker-end="url(#hw-a)"/>
+
+  <!-- DBT BLOCK -->
+  <rect x="158" y="30" width="372" height="138" rx="8" fill="#F9F9F9" stroke="#94D2BD" stroke-width="1.5" filter="url(#hw-s)"/>
+  <rect x="158" y="30" width="372" height="24" rx="8" fill="#FF694B"/>
+  <rect x="158" y="42"  width="372" height="12" fill="#FF694B"/>
+  <text x="344" y="46" text-anchor="middle" font-size="11" font-weight="600" fill="#F9F9F9">dbt build</text>
+
+  <!-- seeds -->
+  <rect x="168" y="60" width="104" height="96" rx="6" fill="#FFF3F0" stroke="#FFB8A8" stroke-width="1"/>
+  <text x="220" y="77" text-anchor="middle" font-size="10" font-weight="600" fill="#FF694B">seeds/</text>
+  <text x="220" y="95" text-anchor="middle" font-size="8.5" fill="#64748B">load raw csv</text>
+  <text x="220" y="111" text-anchor="middle" font-size="8.5" fill="#64748B">into duckdb</text>
+  <text x="220" y="147" text-anchor="middle" font-size="8"   fill="#94D2BD" font-style="italic">raw tables</text>
+
+  <line x1="272" y1="108" x2="286" y2="108" stroke="#FFB8A8" stroke-width="1.5" marker-end="url(#hw-ao)"/>
+
+  <!-- staging -->
+  <rect x="288" y="60" width="110" height="96" rx="6" fill="#FFF3F0" stroke="#FFB8A8" stroke-width="1"/>
+  <text x="343" y="77" text-anchor="middle" font-size="10" font-weight="600" fill="#FF694B">staging/</text>
+  <text x="343" y="95" text-anchor="middle" font-size="8.5" fill="#64748B">clean &amp; type-cast</text>
+  <text x="343" y="111" text-anchor="middle" font-size="8.5" fill="#64748B">add columns</text>
+  <text x="343" y="147" text-anchor="middle" font-size="8"   fill="#94D2BD" font-style="italic">views</text>
+
+  <line x1="398" y1="108" x2="412" y2="108" stroke="#FFB8A8" stroke-width="1.5" marker-end="url(#hw-ao)"/>
+
+  <!-- marts -->
+  <rect x="414" y="60" width="106" height="96" rx="6" fill="#FFF3F0" stroke="#FF694B" stroke-width="1.5"/>
+  <text x="467" y="77" text-anchor="middle" font-size="10" font-weight="600" fill="#FF694B">marts/</text>
+  <text x="467" y="95" text-anchor="middle" font-size="8.5" fill="#64748B">analysis-ready</text>
+  <text x="467" y="111" text-anchor="middle" font-size="8.5" fill="#64748B">tables</text>
+  <text x="467" y="147" text-anchor="middle" font-size="8"   fill="#94D2BD" font-style="italic">tables + parquet</text>
+
+  <!-- dbt → duckdb -->
+  <line x1="344" y1="168" x2="344" y2="218" stroke="#94D2BD" stroke-width="1.5" marker-end="url(#hw-a)"/>
+  <text x="352" y="197" font-size="8" fill="#94D2BD" font-style="italic">writes to</text>
+
+  <!-- DUCKDB -->
+  <rect x="234" y="220" width="220" height="66" rx="8" fill="#F9F9F9" stroke="#E9D8A6" stroke-width="2.5" filter="url(#hw-s)"/>
+  <rect x="234" y="220" width="220" height="24" rx="8" fill="#E9D8A6"/>
+  <rect x="234" y="232" width="220" height="12" fill="#E9D8A6"/>
+  <text x="344" y="236" text-anchor="middle" font-size="11" font-weight="600" fill="#001219">duckdb</text>
+  <text x="344" y="262" text-anchor="middle" font-size="9"   fill="#64748B">nba_finals.duckdb  ·  parquet exports</text>
+  <text x="344" y="277" text-anchor="middle" font-size="8"   fill="#94D2BD" font-style="italic">mart tables live here</text>
+
+  <!-- duckdb → ggsql -->
+  <polyline points="454,253 660,253 660,168" fill="none" stroke="#94D2BD" stroke-width="1.5" marker-end="url(#hw-a)"/>
+  <text x="570" y="247" text-anchor="middle" font-size="8" fill="#94D2BD" font-style="italic">reads parquet</text>
+
+  <!-- GGSQL -->
+  <rect x="552" y="30" width="198" height="138" rx="8" fill="#F9F9F9" stroke="#0A9396" stroke-width="2" filter="url(#hw-s)"/>
+  <rect x="552" y="30" width="198" height="24" rx="8" fill="#0A9396"/>
+  <rect x="552" y="42"  width="198" height="12" fill="#0A9396"/>
+  <text x="651" y="46" text-anchor="middle" font-size="11" font-weight="600" fill="#F9F9F9">ggsql</text>
+  <rect x="562" y="60" width="178" height="68" rx="5" fill="#DEF1EB"/>
+  <text x="572" y="76" font-size="8.5" fill="#005F73" font-family="monospace">FROM mart_shot_chart</text>
+  <text x="572" y="92" font-size="8.5" fill="#005F73" font-family="monospace">VISUALISE loc_x AS x,</text>
+  <text x="572" y="108" font-size="8.5" fill="#005F73" font-family="monospace">  loc_y AS y</text>
+  <text x="572" y="124" font-size="8.5" fill="#005F73" font-family="monospace">DRAW point</text>
+  <rect x="562" y="136" width="178" height="22" rx="4" fill="#005F73"/>
+  <text x="651" y="151" text-anchor="middle" font-size="9.5" font-weight="600" fill="#F9F9F9">→ vega-lite chart</text>
+
+  <!-- BOTTOM NOTE -->
+  <rect x="10" y="308" width="740" height="28" rx="6" fill="#F9F9F9" stroke="#94D2BD" stroke-width="1"/>
+  <text x="380" y="326" text-anchor="middle" font-size="8.5" fill="#64748B">files can arrive from fivetran, airbyte, or any tool that writes csv or parquet — dbt and ggsql only speak sql</text>
+</svg>
